@@ -7,11 +7,12 @@ describe('Tests for Professor object', () => {
 	beforeAll(() => {
 		return Professor.getAll().then((_data) => {
 			data = _data;
+			// console.log(data);
 		});
 	})
 
 	test('should return correct professor information, Alan Hu', () => {
-		let professor = Professor.getProfessor('HU, ALAN', data);
+		let professor = Professor.getProfessorRating('HU, ALAN', data.ratings);
 
 		expect(professor).toEqual({
 			firstName: 'Alan',
@@ -22,7 +23,7 @@ describe('Tests for Professor object', () => {
 	})
 
 	test('should return correct professor information, Wai-ching Alfred, Kong', () => {
-		let professor = Professor.getProfessor('KONG, WAI-CHING ALFRED', data);
+		let professor = Professor.getProfessorRating('KONG, WAI-CHING ALFRED', data.ratings);
 
 		expect(professor).toEqual({
 			firstName: 'Wai-Ching',
@@ -33,7 +34,7 @@ describe('Tests for Professor object', () => {
 	})
 
 	test('should return correct professor information, YU, HOI YIN EUGENIA', () => {
-		let professor = Professor.getProfessor('YU, HOI YIN EUGENIA', data);
+		let professor = Professor.getProfessorRating('YU, HOI YIN EUGENIA', data.ratings);
 
 		expect(professor).toEqual({
 			firstName: 'Hoi Yin Eugenia',
@@ -105,30 +106,35 @@ describe('Tests for Course and Professor', () => {
 	test('should return correct professor information, CPSC 110 101 2017 W', async () => {
 		course.init('CPSC', 110, 101);
 		const profName = await course.getProfessorName();
-		const profInfo = profName.map((_profName) => {
-			return Professor.getProfessor(_profName, data);
+		const profRating = profName.map((_profName) => {
+			return Professor.getProfessorRating(_profName, data.ratings);
+		})
+		const profAvg = profName.map((_profName) => {
+			return Professor.getProfessorAvg(_profName, data.avgs);
 		})
 
-		expect.assertions(1);
-		expect(profInfo[0]).toEqual({
+		expect.assertions(2);
+
+		expect(profRating[0]).toEqual({
 			firstName: 'Gregor',
 			lastName: 'Kiczales',
 			rating: 3.3,
 			rmp: 'http://www.ratemyprofessors.com/ShowRatings.jsp?tid=38077'
 		});
+		expect(profAvg[0]).toHaveLength(15);
 	})
 
 	test('should return correct professor information, STAT 200 202 2017 W', async () => {
 		course.init('STAT', 200, 202);
 		const profName = await course.getProfessorName();
-		const profInfo = profName.map((_profName) => {
-			return Professor.getProfessor(_profName, data);
+		const profRating = profName.map((_profName) => {
+			return Professor.getProfessorRating(_profName, data.ratings);
 		})
 
 		expect.assertions(3);
-		expect(profInfo).toHaveLength(4);
-		expect(profInfo[0]).toBeNull();
-		expect(profInfo[2]).toEqual({
+		expect(profRating).toHaveLength(4);
+		expect(profRating[0]).toBeNull();
+		expect(profRating[2]).toEqual({
 			firstName: 'Hoi Yin Eugenia',
 			lastName: 'Yu',
 			rating: 4.2,
@@ -139,19 +145,19 @@ describe('Tests for Course and Professor', () => {
 	test('should return correct professor information, CPSC 418 101 2017 W', async () => {
 		course.init('CPSC', 418, 101);
 		const profName = await course.getProfessorName();
-		const profInfo = profName.map((_profName) => {
-			return Professor.getProfessor(_profName, data);
+		const profRating = profName.map((_profName) => {
+			return Professor.getProfessorRating(_profName, data.ratings);
 		})
 
 		expect.assertions(3);
-		expect(profInfo).toHaveLength(2);
-		expect(profInfo[0]).toEqual({
+		expect(profRating).toHaveLength(2);
+		expect(profRating[0]).toEqual({
 			firstName: 'Mark',
 			lastName: 'Greenstreet',
 			rating: 3.46,
 			rmp: 'http://www.ratemyprofessors.com/ShowRatings.jsp?tid=74942'			
 		});
-		expect(profInfo[1]).toEqual({
+		expect(profRating[1]).toEqual({
 			firstName: 'Ian',
 			lastName: 'Mitchell',
 			rating: 3.92,

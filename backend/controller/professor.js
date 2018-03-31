@@ -4,21 +4,25 @@ const fs = require('mz/fs');
 
 let Professor = {
 	async getAll() {
-		let data = await fs.readFile('./resources/ratings.txt', 'utf-8');
+		let ratings = await fs.readFile('./resources/ratings.txt', 'utf-8');
+		let avgs = await fs.readFile('./resources/averages.txt', 'utf-8');
 
-		data = JSON.parse(data.trim());
+		ratings = JSON.parse(ratings.trim());
+		avgs = JSON.parse(avgs.trim());
 
-		return data.docs.map(prof => {
+		ratings = ratings.docs.map(prof => {
 			return {
 				firstName: prof.teacherfirstname_t,
 				lastName: prof.teacherlastname_t,
 				rating: prof.averageratingscore_rf,
 				rmp: `http://www.ratemyprofessors.com/ShowRatings.jsp?tid=${prof.pk_id}`
 			}
-		})
+		});
+
+		return {ratings, avgs};
 	},
 
-	getProfessor(fullName, data) {
+	getProfessorRating(fullName, data) {
 		let [lastName, firstName] = fullName.toLowerCase().split(', ');	
 		let profList = data.filter((prof) => {
 			return prof.lastName.toLowerCase() === lastName;
@@ -32,6 +36,13 @@ let Professor = {
 		}
 
 		return profList.length === 0 ? null : profList[0];
+	},
+
+	/*
+	 *	Return the averages of courses a professor has taught.
+	 */
+	getProfessorAvg(fullName, data) {
+		return data[fullName];
 	}
 }
 
