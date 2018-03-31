@@ -10,7 +10,7 @@ let Course = {
 		this.session = session;
 	},
 
-	getProfessor() {
+	getProfessorName() {
 		let options = {
 			uri: `https://courses.students.ubc.ca/cs/main?sessyr=${this.year}&sesscd=${this.session}&pname=subjarea&tname=subjareas&req=5&dept=${this.dept}&course=${this.course}&section=${this.section}`,
 			transform(body) {
