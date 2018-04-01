@@ -42,7 +42,9 @@ let Professor = {
 	 *	Return the averages of courses a professor has taught.
 	 */
 	getProfessorAvg(fullName, data) {
-		return data[fullName];
+		let avgs = data[fullName];
+		
+		return avgs == null ? null : avgs;
 	}
 }
 
