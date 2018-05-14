@@ -4,6 +4,12 @@ const Course = require('./controller/course');
 
 const app = express();
 
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	next();
+})
+
 app.get('/course/:dept-:course-:section-:year-:session', (req, res, next) => {
 	let {dept, course, section, year, session} = req.params;
 	let courseI = Object.create(Course);
@@ -12,7 +18,9 @@ app.get('/course/:dept-:course-:section-:year-:session', (req, res, next) => {
 	Promise.all([courseI.getProfessorName(), Professor.getAll()])
 		.then(([profNames, data]) => {
 			if (profNames === 'TBA') {
-				res.send('TBA');
+				res.send({
+					name: 'TBA'
+				});
 			} else {
 				let response = profNames.map(profName => {
 					return {
