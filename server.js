@@ -34,4 +34,4 @@ app.get('/course/:dept-:course-:section-:year-:session', (req, res, next) => {
 		});
 })
 
-app.listen(3000, () => console.log('Server started!'));
+app.listen(process.env.PORT || 3000, () => console.log('Server started!'));
